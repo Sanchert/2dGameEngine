@@ -79,72 +79,41 @@ class PlayerBulletFactory implements IBulletFactory {
     }
 }
 
-class MoveUpCommand implements ICommand {
-    @Override
-    public void exec(GameWorld g) {
-        g.getPlayer().setCurrentDirection(MoveDirection.MOVE_UP);
-        g.getPlayer().move();
-    }
-}
-class MoveDownCommand implements ICommand {
-    @Override
-    public void exec(GameWorld g) {
-        g.getPlayer().setCurrentDirection(MoveDirection.MOVE_DOWN);
-        g.getPlayer().move();
-    }
-}
-class ShootCommand implements ICommand {
-    @Override
-    public void exec(GameWorld g) {
-        g.getPlayer().shoot(g); // ??? ... gameworld.shoot()
-    }
-}
-
 //TODO: singleton?
 class InputHandler {
-    private final Set<KeyCode> activeKeys = new HashSet<>();
-    private boolean fireKeyPressed = false;
-
+//    private final Set<KeyCode> activeKeys = new HashSet<>();
+    private boolean D_Pressed = false;
+    private boolean W_Pressed = false;
+    private boolean S_Pressed = false;
     public void handleKeyPressed(KeyCode keyCode) {
-        activeKeys.add(keyCode);
-        if (keyCode == KeyCode.D) {
-            fireKeyPressed = true;
+//        activeKeys.add(keyCode);
+        switch (keyCode) {
+            case KeyCode.D -> D_Pressed = true;
+            case KeyCode.W -> W_Pressed = true;
+            case KeyCode.S -> S_Pressed = true;
         }
     }
 
     public void handleKeyReleased(KeyCode keyCode) {
-        activeKeys.remove(keyCode);
-        if (keyCode == KeyCode.D) {
-            fireKeyPressed = false;
+//        activeKeys.remove(keyCode);
+        switch (keyCode) {
+            case KeyCode.D -> D_Pressed = false;
+            case KeyCode.W -> W_Pressed = false;
+            case KeyCode.S -> S_Pressed = false;
         }
     }
 
-    public ICommand handleInput(GameState gameState) {
-        if (gameState != GameState.RUN) {
-            return null;
-        }
-
-        // Проверяем движение вверх
-        if (activeKeys.contains(KeyCode.W)) {
-            return new MoveUpCommand();
-        }
-        // Проверяем движение вниз
-        else if (activeKeys.contains(KeyCode.S)) {
-            return new MoveDownCommand();
-        }
-        // Проверяем выстрел
-        else if (fireKeyPressed) {
-            fireKeyPressed = false; // Сбрасываем флаг для одиночного выстрела
-            return new ShootCommand();
-        }
-
-        return null;
+    public boolean isDKeyPressed() {
+        return D_Pressed;
     }
 
-}
+    public boolean isSKeyPressed() {
+        return S_Pressed;
+    }
 
-interface ICommand {
-    void exec(GameWorld g);
+    public boolean isWKeyPressed() {
+        return W_Pressed;
+    }
 }
 
 abstract class GameObject {
@@ -161,11 +130,6 @@ abstract class GameObject {
 
     public abstract void update();
     public abstract Rectangle getBounds();
-    /**
-     * Move to new position in the game world
-     * @param pos_x new x position
-     * @param pos_y new y position
-     */
     public void setPosition(float pos_x, float pos_y) {
         this.pos_x = pos_x;
         this.pos_y = pos_y;
@@ -421,10 +385,13 @@ class GameWorld {
     }
 
     private void processInput() {
-        ICommand command = inputHandler.handleInput(gameState);
-        if (command != null) {
-            command.exec(this);
-        } else { // TODO: do something else
+        if (inputHandler.isDKeyPressed()) {
+            player.shoot(this);
+        } else if (inputHandler.isSKeyPressed()) {
+            player.setCurrentDirection(MoveDirection.MOVE_DOWN);
+        } else if (inputHandler.isWKeyPressed()) {
+            player.setCurrentDirection(MoveDirection.MOVE_UP);
+        } else {
             player.setCurrentDirection(null);
         }
     }
