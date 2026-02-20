@@ -3,6 +3,7 @@ package org.example.keenmarksmanfx;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.CycleMethod;
@@ -460,10 +461,10 @@ public class GameController {
 
     private GameWorld gameWorld;
 
-    public void setWorld(GameWorld world) {
-        this.gameWorld = world;
-        gameWorld.gameWorld_INIT(Root);
-        gameWorld.gameWorld_SETUP(Player, Score_number, Shoots_number);
+    public void setGameWorld(GameWorld g) {
+        this.gameWorld = g;
+        this.gameWorld.gameWorld_INIT(Root);
+        this.gameWorld.gameWorld_SETUP(Player, Score_number, Shoots_number);
     }
 
     @FXML
@@ -482,5 +483,18 @@ public class GameController {
     @FXML
     protected void onResumeBtnClick() {
         gameWorld.setGameState(GameState.RUN);
+    }
+    @FXML
+    protected void onKeyPressed(KeyEvent event) {
+        this.gameWorld.getInputHandler().handleKeyPressed(event.getCode());
+        if (event.getCode() == KeyCode.ESCAPE) {
+            if (this.gameWorld.getGameState() == GameState.RUN) {
+                this.gameWorld.setGameState(GameState.PAUSED);
+            }
+        }
+    }
+    @FXML
+    protected void onKeyReleased(KeyEvent event) {
+        this.gameWorld.getInputHandler().handleKeyReleased(event.getCode());
     }
 }

@@ -26,20 +26,7 @@ public class GameApplication extends Application {
 
         this.gameWorld = new GameWorld();
         GameController controller = fxmlLoader.getController();
-        controller.setWorld(this.gameWorld);
-
-        scene.setOnKeyPressed(event -> {
-            this.gameWorld.getInputHandler().handleKeyPressed(event.getCode());
-            if (event.getCode() == KeyCode.ESCAPE) {
-                if (this.gameWorld.getGameState() == GameState.RUN) {
-                    this.gameWorld.setGameState(GameState.PAUSED);
-                }
-            }
-        });
-
-        scene.setOnKeyReleased(event ->
-                this.gameWorld.getInputHandler().handleKeyReleased(event.getCode())
-        );
+        controller.setGameWorld(this.gameWorld);
 
         stage.setTitle("Space Invaders - UNN version");
         stage.setScene(scene);
