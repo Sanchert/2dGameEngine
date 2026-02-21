@@ -338,10 +338,14 @@ class GameWorld {
     private final List<Enemy> enemies = new ArrayList<>();
     private final List<Bullet> bullets = new ArrayList<>();
     private int score = 0;
+    private boolean initialised = false;
+
     public void gameWorld_INIT(AnchorPane root) {
+        if (initialised) return;
         player = new Player(21, 150);
         enemyFactory = new EnemyFactory(root, enemies);
         bulletFactory = new PlayerBulletFactory(root, bullets);
+        initialised = true;
     }
 
     public void gameWorld_SETUP(Shape playerView,  Label l1, Label l2) {
@@ -355,24 +359,23 @@ class GameWorld {
         score = 0; //TODO: order
         scoreText.setText(Integer.toString(score)); //
 
-
         player.setShoots(10); // TODO: order
         player.setShootText(l2); //
         player.setSprite(playerView);
         player.setPosition(21f,150f);
 
-        float startPosX = 270f;
-        float startPosY = 30f;
-        float startSpeed = .5f;
-        int   startCost = 3;
+        float enemyStartPosX = 270f;
+        float enemyStartPosY = 30f;
+        float enemyStartSpeed = .5f;
+        int   enemyStartCost = 3;
         for (int i = 0; i < gameDifficulty.mode(); i++) {
-            enemyFactory.createEnemy(startPosX, startPosY, startSpeed, startCost);
+            enemyFactory.createEnemy(enemyStartPosX, enemyStartPosY, enemyStartSpeed, enemyStartCost);
             if (i >= gameDifficulty.mode() / 2) {
-                startCost = 2;
-                startSpeed += .75f;
+                enemyStartCost = 2;
+                enemyStartSpeed += .75f;
             }
-            startPosY +=  4f;
-            startPosX += 40f;
+            enemyStartPosY +=  4f;
+            enemyStartPosX += 40f;
         }
     }
 
