@@ -3,20 +3,22 @@ package org.example.keenmarksmanfx;
 import javafx.scene.shape.Rectangle;
 
 class Bullet extends GameObject {
-    private final float SPEED;
+    private final double SPEED;
 
-    public Bullet(float pos_x, float pos_y) {
+    public Bullet(double pos_x, double pos_y) {
         super(pos_x, pos_y);
         SPEED = 3.5f;
     }
 
     @Override
-    public void update() {
-        this.move();
+    public void update(double step) {
+        this.move(step);
+        sprite.setLayoutX(pos_x);
+        sprite.setLayoutY(pos_y);
     }
 
-    private void move() {
-        setPosition(this.pos_x += SPEED, pos_y);
+    private void move(double step) {
+        setPosition(this.pos_x += SPEED * step, pos_y);
         if (this.pos_x > 800) { // За экраном
             this.destroy();
         }

@@ -16,7 +16,7 @@ class PlayerBulletFactory implements IBulletFactory {
     }
 
     @Override
-    public void createBullet(float pos_x, float pos_y) {
+    public void createBullet(double pos_x, double pos_y) {
         Rectangle bulletView = new Rectangle(10, 10);
         bulletView.setFill(Color.GREEN);
         bulletView.setId("bullet_" + System.nanoTime());

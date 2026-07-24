@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 class GameWorld {
-    private GameState gameState = GameState.PAUSED;
+    private volatile GameState gameState = GameState.PAUSED;
     private final GameDifficulty gameDifficulty = GameDifficulty.HARDCORE;
     private final InputHandler inputHandler = new InputHandler();
 
@@ -56,7 +56,7 @@ class GameWorld {
 
         float enemyStartPosX = 270f;
         float enemyStartPosY = 30f;
-        float enemyStartSpeed = .5f;
+        float enemyStartSpeed = 15;
         int enemyStartCost = 3;
         for (int i = 0; i < gameDifficulty.mode(); i++) {
             enemyFactory.createEnemy(enemyStartPosX, enemyStartPosY, enemyStartSpeed, enemyStartCost);
@@ -91,26 +91,19 @@ class GameWorld {
         }
     }
 
-    public void update() {
+    public void update(double step) {
         //TODO: общий список для всех, кто требует update
-        player.update();
-        enemies.forEach(GameObject::update);
-        bullets.forEach(GameObject::update);
+        player.update(step);
+        for (Enemy obj : enemies) {
+            obj.update(step);
+        }
+        for (GameObject obj : bullets) {
+            obj.update(step);
+        }
 
-        // TODO: call onCollisionEnter2D()?
         checkCollisions();
 
         cleanDestroyedObjects();
-    }
-
-    public void render(double step) {
-        player.render(step);
-        for (GameObject g : enemies) {
-            g.render(step);
-        }
-        for (GameObject g : bullets) {
-            g.render(step);
-        }
     }
 
     private void checkCollisions() {
@@ -153,11 +146,11 @@ class GameWorld {
         });
     }
 
-    public GameState getGameState() {
+    public synchronized GameState getGameState() {
         return gameState;
     }
 
-    public void setGameState(GameState state) {
+    public synchronized void setGameState(GameState state) {
         this.gameState = state;
     }
 //    public Player getPlayer() { return player; }

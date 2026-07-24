@@ -14,27 +14,30 @@ public class GameController {
     private GameWorld gameWorld;
     private Thread gameThread;
     private final long MS_PER_UPDATE = 16;
+
     public void startGame() {
         if (gameThread == null) {
+            System.out.println("thread");
             gameThread = new Thread(() -> {
                 long prev = System.currentTimeMillis();
                 long lag = 0;
                 while (gameWorld.getGameState() != GameState.EXIT) {
-                    long current = System.currentTimeMillis();
-                    long elapsed = current - prev;
-                    prev = current;
-                    lag += elapsed;
-                    while (gameWorld.getGameState() == GameState.RUN) {
+                    if (gameWorld.getGameState() == GameState.RUN) {
+                        long current = System.currentTimeMillis();
+                        long elapsed = current - prev;
+                        prev = current;
+                        lag += elapsed;
                         gameWorld.processInput();
                         while (lag >= MS_PER_UPDATE) {
-                            Platform.runLater(() -> gameWorld.update());
+                            long finalLag = lag;
+                            Platform.runLater(() -> gameWorld.update((double) finalLag / MS_PER_UPDATE)); // NOTICE: or ms / 1000
                             lag -= MS_PER_UPDATE;
                         }
-                        gameWorld.render((double)lag / MS_PER_UPDATE);
+                    } else {
+                        prev = System.currentTimeMillis();
                     }
                 }
             });
-
             gameThread.start();
         }
     }
@@ -43,6 +46,7 @@ public class GameController {
         gameWorld = new GameWorld();
         gameWorld.gameWorld_INIT(Root); // Для программного добавления и удаления игровых объектов
         gameWorld.gameWorld_SETUP(Player, Score_number, Shoots_number); // TODO: изменить инициализацию на более общую
+        System.out.println("INIT");
         startGame();
     }
 
@@ -50,8 +54,10 @@ public class GameController {
         gameWorld.setGameState(GameState.PAUSED);
     }
     @FXML protected void onStartBtnClick() { //TODO: restart game state
+        System.out.println("STATUS: RUN");
         gameWorld.setGameState(GameState.RUN);
         gameWorld.gameWorld_SETUP(Player, Score_number, Shoots_number);
+
     }
     @FXML protected void onExitBtnClick() {
         gameWorld.setGameState(GameState.EXIT);

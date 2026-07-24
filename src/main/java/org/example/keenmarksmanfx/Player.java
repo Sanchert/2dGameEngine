@@ -4,9 +4,9 @@ import javafx.scene.control.Label;
 import javafx.scene.shape.Rectangle;
 
 class Player extends GameObject {
-    private final float SPEED;
-    private final float MIN_Y;
-    private final float MAX_Y;
+    private final double SPEED;
+    private final double MIN_Y;
+    private final double MAX_Y;
     private MoveDirection currentDirection = null;
     private int shoots = 10;
     private Label shootsText;
@@ -16,11 +16,11 @@ class Player extends GameObject {
         this.currentDirection = moveDirection;
     }
 
-    public Player(float pos_x, float pos_y) {
+    public Player(double pos_x, double pos_y) {
         super(pos_x, pos_y);
-        SPEED = 1.0f;
-        MIN_Y = 30f;
-        MAX_Y = 270f;
+        SPEED = 1.0;
+        MIN_Y = 30.0;
+        MAX_Y = 270.0;
     }
 
     public void setShootText(Label l) {
@@ -29,9 +29,9 @@ class Player extends GameObject {
     }
 
     @Override
-    public void update() {
+    public void update(double step) {
         if (currentDirection != null) {
-            move();
+            move(step);
         }
         timer--;
     }
@@ -43,7 +43,7 @@ class Player extends GameObject {
         } else {
             timer = 60;
         }
-        b.createBullet(pos_x + 10f, pos_y + 20f);
+        b.createBullet(pos_x + 10.0, pos_y + 20.0);
         shoots--;
         shootsText.setText(Integer.toString(shoots));
     }
@@ -56,11 +56,12 @@ class Player extends GameObject {
 //        return this.shoots;
 //    }
 
-    protected void move() {
+    protected void move(double step) {
         if (currentDirection == MoveDirection.MOVE_UP) {
-            pos_y = Math.max(MIN_Y, pos_y - SPEED);
-        } else if (currentDirection == MoveDirection.MOVE_DOWN) {
-            pos_y = Math.min(MAX_Y, pos_y + SPEED);
+            pos_y = Math.max(MIN_Y, pos_y - SPEED * step);
+        } else
+        if (currentDirection == MoveDirection.MOVE_DOWN) {
+            pos_y = Math.min(MAX_Y, pos_y + SPEED * step);
         }
         setPosition(pos_x, pos_y);
     }
