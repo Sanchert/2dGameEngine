@@ -13,21 +13,24 @@ public class GameController {
     @FXML private AnchorPane Root;
     private GameWorld gameWorld;
     private Thread gameThread;
-
+    private final long MS_PER_UPDATE = 16;
     public void startGame() {
         if (gameThread == null) {
             gameThread = new Thread(() -> {
+                long prev = System.currentTimeMillis();
+                long lag = 0;
                 while (gameWorld.getGameState() != GameState.EXIT) {
+                    long current = System.currentTimeMillis();
+                    long elapsed = current - prev;
+                    prev = current;
+                    lag += elapsed;
                     while (gameWorld.getGameState() == GameState.RUN) {
-                        Platform.runLater(() -> {
-                            gameWorld.update();
-                        });
-
-                        try {
-                            Thread.sleep(12);
-                        } catch (InterruptedException e) {
-                            return;
+                        gameWorld.processInput();
+                        while (lag >= MS_PER_UPDATE) {
+                            Platform.runLater(() -> gameWorld.update());
+                            lag -= MS_PER_UPDATE;
                         }
+                        gameWorld.render((double)lag / MS_PER_UPDATE);
                     }
                 }
             });

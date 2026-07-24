@@ -73,13 +73,13 @@ class GameWorld {
         return inputHandler;
     }
 
-    void update() {
-        processInput();
-        allUpdate();
-        render();
-    }
+//    void update() {
+//        processInput();
+//        allUpdate();
+//        render();
+//    }
 
-    private void processInput() {
+    public void processInput() {
         if (inputHandler.isDKeyPressed()) {
             player.shoot(bulletFactory);
         } else if (inputHandler.isSKeyPressed()) {
@@ -91,7 +91,7 @@ class GameWorld {
         }
     }
 
-    private void allUpdate() {
+    public void update() {
         //TODO: общий список для всех, кто требует update
         player.update();
         enemies.forEach(GameObject::update);
@@ -103,10 +103,14 @@ class GameWorld {
         cleanDestroyedObjects();
     }
 
-    private void render() {
-        player.render();
-        enemies.forEach(GameObject::render);
-        bullets.forEach(GameObject::render);
+    public void render(double step) {
+        player.render(step);
+        for (GameObject g : enemies) {
+            g.render(step);
+        }
+        for (GameObject g : bullets) {
+            g.render(step);
+        }
     }
 
     private void checkCollisions() {
