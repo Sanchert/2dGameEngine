@@ -1,9 +1,11 @@
 package org.example.keenmarksmanfx;
 
 import javafx.scene.control.Label;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.shape.Shape;
 
+import java.security.Key;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -80,11 +82,11 @@ class GameWorld {
 //    }
 
     public void processInput() {
-        if (inputHandler.isDKeyPressed()) {
+        if (inputHandler.isKeyPressed(KeyCode.D)) {
             player.shoot(bulletFactory);
-        } else if (inputHandler.isSKeyPressed()) {
+        } else if (inputHandler.isKeyPressed(KeyCode.S)) {
             player.setCurrentDirection(MoveDirection.MOVE_DOWN);
-        } else if (inputHandler.isWKeyPressed()) {
+        } else if (inputHandler.isKeyPressed(KeyCode.W)) {
             player.setCurrentDirection(MoveDirection.MOVE_UP);
         } else {
             player.setCurrentDirection(null);

@@ -2,39 +2,32 @@ package org.example.keenmarksmanfx;
 
 import javafx.scene.input.KeyCode;
 
+import java.util.HashSet;
+import java.util.Set;
+
 class InputHandler {
-    //    private final Set<KeyCode> activeKeys = new HashSet<>();
-    private boolean D_Pressed = false;
-    private boolean W_Pressed = false;
-    private boolean S_Pressed = false;
+    private final Set<KeyCode> keyPressed = new HashSet<>();
+    private final Set<KeyCode> keyJustPressed = new HashSet<>();
 
     public void handleKeyPressed(KeyCode keyCode) {
-//        activeKeys.add(keyCode);
-        switch (keyCode) {
-            case KeyCode.D -> D_Pressed = true;
-            case KeyCode.W -> W_Pressed = true;
-            case KeyCode.S -> S_Pressed = true;
+        keyJustPressed.remove(keyCode);
+        if (!keyPressed.contains(keyCode)) {
+            keyJustPressed.add(keyCode);
         }
+        keyPressed.add(keyCode);
+//        System.out.println(keyPressed);
     }
 
     public void handleKeyReleased(KeyCode keyCode) {
-//        activeKeys.remove(keyCode);
-        switch (keyCode) {
-            case KeyCode.D -> D_Pressed = false;
-            case KeyCode.W -> W_Pressed = false;
-            case KeyCode.S -> S_Pressed = false;
-        }
+        keyPressed.remove(keyCode);
+        keyJustPressed.remove(keyCode);
     }
 
-    public boolean isDKeyPressed() {
-        return D_Pressed;
+    public boolean isKeyPressed(KeyCode keyCode) {
+        return keyPressed.contains(keyCode);
     }
 
-    public boolean isSKeyPressed() {
-        return S_Pressed;
-    }
-
-    public boolean isWKeyPressed() {
-        return W_Pressed;
+    public boolean isKeyJustPressed(KeyCode keyCode) {
+        return keyJustPressed.contains(keyCode);
     }
 }
