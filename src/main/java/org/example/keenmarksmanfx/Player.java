@@ -33,6 +33,7 @@ class Player extends GameObject {
         if (currentDirection != null) {
             move(step);
         }
+        this.redraw();
         timer--;
     }
 

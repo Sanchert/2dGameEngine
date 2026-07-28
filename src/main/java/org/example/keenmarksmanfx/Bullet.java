@@ -13,8 +13,7 @@ class Bullet extends GameObject {
     @Override
     public void update(double step) {
         this.move(step);
-        sprite.setLayoutX(pos_x);
-        sprite.setLayoutY(pos_y);
+        this.redraw();
     }
 
     private void move(double step) {

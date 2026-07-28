@@ -25,11 +25,11 @@ abstract class GameObject {
         this.pos_y = pos_y;
     }
 
-//    public void render(double step) {
-//        if (sprite == null) return;
-//        sprite.setLayoutX(pos_x);
-//        sprite.setLayoutY(pos_y);
-//    }
+    public void redraw() {
+        if (sprite == null) return;
+        sprite.setLayoutX(pos_x);
+        sprite.setLayoutY(pos_y);
+    }
 
     //    public void setPositionX(float pos_x) {
 //        this.pos_x = pos_x;
