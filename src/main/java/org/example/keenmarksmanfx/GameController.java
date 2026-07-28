@@ -1,5 +1,6 @@
 package org.example.keenmarksmanfx;
 
+import javafx.animation.AnimationTimer;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
@@ -12,16 +13,15 @@ public class GameController {
     @FXML private Label Score_number, Shoots_number;
     @FXML private AnchorPane Root;
     private GameWorld gameWorld;
-    private Thread gameThread;
     private final long MS_PER_UPDATE = 16;
 
     public void startGame() {
-        if (gameThread == null) {
-            System.out.println("thread");
-            gameThread = new Thread(() -> {
-                long prev = System.currentTimeMillis();
-                long lag = 0;
-                while (gameWorld.getGameState() != GameState.EXIT) {
+        AnimationTimer timer = new AnimationTimer() {
+            long prev = System.currentTimeMillis();
+            long lag = 0;
+            @Override
+            public void handle(long l) {
+                if (gameWorld.getGameState() != GameState.EXIT) {
                     if (gameWorld.getGameState() == GameState.RUN) {
                         long current = System.currentTimeMillis();
                         long elapsed = current - prev;
@@ -36,10 +36,12 @@ public class GameController {
                     } else {
                         prev = System.currentTimeMillis();
                     }
+                } else {
+                    this.stop();
                 }
-            });
-            gameThread.start();
-        }
+            }
+        };
+        timer.start();
     }
 
     public void initialize() {
