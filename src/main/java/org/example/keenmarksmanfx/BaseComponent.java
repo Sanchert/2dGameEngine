@@ -1,8 +1,8 @@
 package org.example.keenmarksmanfx;
 
 public abstract class BaseComponent implements IComponent {
-    private final boolean removable;
-    private final GameObj owner;
+    protected final boolean removable;
+    protected final GameObj owner;
     public BaseComponent(boolean removable, GameObj owner) {
         this.removable = removable;
         this.owner = owner;

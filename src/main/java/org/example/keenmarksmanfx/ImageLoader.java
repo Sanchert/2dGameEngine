@@ -20,4 +20,15 @@ class ImageLoader {
             throw new RuntimeException(e);
         }
     }
+
+    public static Image loadImageFromPath(String pathToFile, double width, double height) {
+        Path path = Paths.get(pathToFile);
+        try {
+            byte[] bytes = Files.readAllBytes(path);
+            InputStream inputStream = new ByteArrayInputStream(bytes);
+            return new Image(inputStream, width, height, true, false);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
