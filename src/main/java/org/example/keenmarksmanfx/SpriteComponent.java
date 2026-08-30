@@ -1,17 +1,65 @@
 package org.example.keenmarksmanfx;
 
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-
 @AutoName(prefix = "SpriteComponent")
 public class SpriteComponent extends BaseComponent {
-    public ImageView sprite = new ImageView();
+    private int textureID;
+    private float[] UVCrd;
+    private float r = 1.0f, g = 1.0f, b = 1.0f, a = 1.0f;
+    private boolean visible = true;
+    private int layer;
 
-    public SpriteComponent(Image sprite, GameObj owner) {
+    public SpriteComponent(GameObj owner) {
         super(true, owner);
-        this.sprite.setImage(sprite);
     }
 
-    @Override
-    public void update() {}
+    public void setRGBA(float r, float g, float b, float a) {
+        this.r = r;
+        this.g = g;
+        this.b = b;
+        this.a = a;
+    }
+
+    public float getR() {
+        return r;
+    }
+
+    public float getG() {
+        return g;
+    }
+
+    public float getB() {
+        return b;
+    }
+
+    public float getA() {
+        return a;
+    }
+
+    public int getLayer() {
+        return layer;
+    }
+
+    public int getTextureID() {
+        return textureID;
+    }
+
+    public boolean isVisible() {
+        return visible;
+    }
+
+    public void setTextureID(int id) {
+        this.textureID = id;
+    }
+
+    public void setLayer(int layer) {
+        this.layer = layer;
+    }
+
+    public void setUvCrd(float[] uvCrd) {
+        this.UVCrd = uvCrd;
+    }
+
+    public float[] getUvCrd() {
+        return UVCrd;
+    }
 }

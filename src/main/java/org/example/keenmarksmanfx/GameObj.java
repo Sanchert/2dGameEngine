@@ -3,7 +3,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
-import java.util.function.Predicate;
 
 public class GameObj {
     private final HashMap<String, IComponent> byName = new HashMap<>();
@@ -46,27 +45,14 @@ public class GameObj {
 //        return false;
 //    }
 
-    public void updateComponents() {
-        byName.forEach((_, c) -> c.update());
-    }
-
     protected double pos_x, pos_y;
+    protected double width, height;
+    protected double scaleX = 1.0, ScaleY = 1.0;
+    protected double rotation;
     protected boolean destroyed = false;
 
-    public GameObj(double x, double y) {
-        setPosition(x, y);
-    }
-
-    public void setPosition(double pos_x, double pos_y) {
+    public GameObj(double pos_x, double pos_y) {
         this.pos_x = pos_x;
         this.pos_y = pos_y;
-    }
-
-    public void destroy() {
-        destroyed = true;
-    }
-
-    public boolean isDestroyed() {
-        return destroyed;
     }
 }

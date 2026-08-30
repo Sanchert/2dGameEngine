@@ -1,5 +1,6 @@
 package org.example.keenmarksmanfx;
 
+import javafx.scene.image.ImageView;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
 

@@ -5,11 +5,12 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.shape.Shape;
 
-import java.security.Key;
+import static org.lwjgl.glfw.GLFW.*;
+
 import java.util.ArrayList;
 import java.util.List;
 
-class GameWorld {
+class ObjectManager {
     private volatile GameState gameState = GameState.PAUSED;
     private final GameDifficulty gameDifficulty = GameDifficulty.HARDCORE;
     private final InputHandler inputHandler = new InputHandler();
@@ -22,6 +23,7 @@ class GameWorld {
     private Player player;
     private final List<Enemy> enemies = new ArrayList<>();
     private final List<Bullet> bullets = new ArrayList<>();
+    private Fire fire;
 
     private int score = 0;
     private boolean initialised = false;
@@ -35,6 +37,9 @@ class GameWorld {
     public void gameWorld_INIT(AnchorPane root) {
         if (initialised) return;
         player = new Player(21, 150);
+
+        fire = new Fire(100, 100);
+
         enemyFactory = new EnemyFactory(root, enemies);
         bulletFactory = new PlayerBulletFactory(root, bullets);
         initialised = true;
@@ -82,11 +87,11 @@ class GameWorld {
 //    }
 
     public void processInput() {
-        if (inputHandler.isKeyPressed(KeyCode.D)) {
+        if (inputHandler.isKeyPressed(GLFW_KEY_D)) {
             player.shoot(bulletFactory);
-        } else if (inputHandler.isKeyPressed(KeyCode.S)) {
+        } else if (inputHandler.isKeyPressed(GLFW_KEY_S)) {
             player.setCurrentDirection(MoveDirection.MOVE_DOWN);
-        } else if (inputHandler.isKeyPressed(KeyCode.W)) {
+        } else if (inputHandler.isKeyPressed(GLFW_KEY_W)) {
             player.setCurrentDirection(MoveDirection.MOVE_UP);
         } else {
             player.setCurrentDirection(null);
@@ -96,6 +101,7 @@ class GameWorld {
     public void update(double step) {
         //TODO: общий список для всех, кто требует update
         player.update(step);
+        fire.updateComponents();
         for (Enemy obj : enemies) {
             obj.update(step);
         }
