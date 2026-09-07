@@ -45,13 +45,13 @@ public class GameObj {
 //        return false;
 //    }
 
-    protected double pos_x, pos_y;
-    protected double width, height;
-    protected double scaleX = 1.0, ScaleY = 1.0;
-    protected double rotation;
+    protected float pos_x, pos_y;
+    protected float width, height;
+    protected float scaleX = 1f, scaleY = 1f;
+    protected float rotation;
     protected boolean destroyed = false;
 
-    public GameObj(double pos_x, double pos_y) {
+    public GameObj(float pos_x, float pos_y) {
         this.pos_x = pos_x;
         this.pos_y = pos_y;
     }
