@@ -68,10 +68,9 @@ public class Launcher {
             render();
             renderCalls++; // NOTE
 
-            // ВЫВОД РАЗ В СЕКУНДУ
             if (System.currentTimeMillis() - lastFpsCheck >= 1000) {
                 System.out.println("FPS: " + frameCount + ", FixedUpdate: " + fixedUpdateCalls + ", Render: " + renderCalls);
-                // ОБНУЛЕНИЕ СЧЁТЧИКОВ
+
                 frameCount = 0;
                 fixedUpdateCalls = 0;
                 renderCalls = 0;
@@ -86,28 +85,19 @@ public class Launcher {
     }
 
     private void windowInit() {
-        // 1. Настройка обработчика ошибок GLFW
         GLFWErrorCallback.createPrint(System.err).set();
 
-        // 2. Инициализация GLFW
         if (!glfwInit()) {
             throw new IllegalStateException("Не удалось инициализировать GLFW");
         }
 
-        // 3. Получаем первичный монитор
         long monitor = glfwGetPrimaryMonitor();
         GLFWVidMode vidMode = glfwGetVideoMode(monitor);
 
-        // 4. Настройка параметров окна для полноэкранного режима
         glfwDefaultWindowHints();
         glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
-        glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE); // в полноэкранном режиме изменение размера не нужно
+        glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE); // полноэкранный режим
 
-        // ВАЖНО: отключаем режим окна, чтобы GLFW знал, что мы создаём полноэкранное окно
-        // (по умолчанию GLFW_DECORATED включен)
-
-        // 5. Создание полноэкранного окна
-        // передаём указатель на монитор, а размеры берём из видеорежима монитора
         assert vidMode != null;
         window = glfwCreateWindow(
                 vidMode.width(),
@@ -121,24 +111,19 @@ public class Launcher {
             throw new RuntimeException("Не удалось создать полноэкранное окно");
         }
 
-        // 6. Делаем OpenGL-контекст текущим
         glfwMakeContextCurrent(window);
 
-        // 7. Включаем вертикальную синхронизацию (VSync) на тестовой машине 31-32 fps. При отключении ~13000 fps
+        // VSync на тестовой машине 31-32 fps. При отключении ~13000 fps
 //        glfwSwapInterval(1);
 
-        // 8. Показываем окно
         glfwShowWindow(window);
 
-        // 9. Инициализируем привязки OpenGL
         GL.createCapabilities();
 
-        // Разрешаем рендер 2д текстур и устанавливаем прозрачность
         GL11.glEnable(GL11.GL_TEXTURE_2D);
         GL11.glEnable(GL11.GL_BLEND);
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 
-        // 10. Устанавливаем цвет очистки экрана
         glClearColor(0.1f, 0.2f, 0.4f, 1.0f);
 
         setupOrthographicProjection();
@@ -159,7 +144,6 @@ public class Launcher {
     }
 
     private void initObjects() {
-        // Пример: создаем объект с текстурой
         player = new GameObj(250f,350f);
         p1= new GameObj(350f, 350f);
         p2= new GameObj(450f, 350f);
@@ -192,11 +176,11 @@ public class Launcher {
         p3.scaleX = 7;
         p3.scaleY = 7;
 
-        // Регистрируем в рендерере
         renderSystem.register(player);
         renderSystem.register(p1);
         renderSystem.register(p2);
         renderSystem.register(p3);
+
         objects.add(player);
         objects.add(p1);
         objects.add(p2);
@@ -307,14 +291,13 @@ class Loader {
 class RenderSystem {
     private final List<Renderable> renderables = new ArrayList<>();
     private final FloatBuffer vertexBuffer;
-    private final int maxBatchSize = 1000; // максимум спрайтов в одном батче
+    private final int maxBatchSize = 1000;
 
     public RenderSystem() {
-        // Выделяем буфер для вершин (4 вершины * 4 компонента (x, y, u, v) * 4 байта)
+        // буфер для вершин (4 вершины * 4 компонента (x, y, u, v) * 4 байта)
         vertexBuffer = BufferUtils.createFloatBuffer(maxBatchSize * 4 * 4);
     }
 
-    // Регистрация объекта для рендеринга
     public void register(GameObj obj) {
         SpriteComponent sprite = obj.getComponent(SpriteComponent.class);
 
@@ -324,12 +307,10 @@ class RenderSystem {
         }
     }
 
-    // Очистка перед каждым кадром
     public void clear() {
         renderables.clear();
     }
 
-    // Рендеринг всех объектов
     public void render() {
         if (renderables.isEmpty()) return;
 
@@ -341,7 +322,6 @@ class RenderSystem {
             SpriteComponent sprite = r.sprite;
             GameObj transform = r.transform;
 
-            // Если текстура сменилась — отрисовываем текущий батч
             if (sprite.getTextureID() != currentTextureId && vertexCount > 0) {
                 flushBatch(currentTextureId, vertexCount);
                 vertexCount = 0;
@@ -350,11 +330,9 @@ class RenderSystem {
 
             currentTextureId = sprite.getTextureID();
 
-            // Добавляем вершины спрайта в буфер
             addVertex(transform, sprite.getUvCrd());
             vertexCount += 4;
 
-            // Если батч заполнен — отрисовываем
             if (vertexCount >= maxBatchSize) {
                 flushBatch(currentTextureId, vertexCount);
                 vertexCount = 0;
@@ -362,7 +340,6 @@ class RenderSystem {
             }
         }
 
-        // Отрисовываем оставшиеся
         if (vertexCount > 0) {
             flushBatch(currentTextureId, vertexCount);
         }
@@ -374,13 +351,13 @@ class RenderSystem {
         float w = transform.width * transform.scaleX;
         float h = transform.height * transform.scaleY;
 
-        // Левый нижний
+        // Left Down
         vertexBuffer.put(x).put(y).put(uv[0]).put(uv[1]);
-        // Правый нижний
+        // Right Down
         vertexBuffer.put(x + w).put(y).put(uv[2]).put(uv[1]);
-        // Правый верхний
+        // Right Up
         vertexBuffer.put(x + w).put(y + h).put(uv[2]).put(uv[3]);
-        // Левый верхний
+        // Left Up
         vertexBuffer.put(x).put(y + h).put(uv[0]).put(uv[3]);
     }
 
@@ -389,7 +366,6 @@ class RenderSystem {
 
         GL11.glBindTexture(GL11.GL_TEXTURE_2D, textureId);
 
-        // Настройка атрибутов вершин (позиция и UV)
         GL11.glEnableClientState(GL11.GL_VERTEX_ARRAY);
         GL11.glEnableClientState(GL11.GL_TEXTURE_COORD_ARRAY);
 
@@ -398,7 +374,6 @@ class RenderSystem {
         vertexBuffer.position(2);
         GL11.glTexCoordPointer(2, GL11.GL_FLOAT, 4 * 4, vertexBuffer);
 
-        // Рисуем как QUADS (4 вершины на спрайт)
         GL11.glDrawArrays(GL11.GL_QUADS, 0, vertexCount);
 
         GL11.glDisableClientState(GL11.GL_VERTEX_ARRAY);
@@ -407,7 +382,6 @@ class RenderSystem {
         GL11.glBindTexture(GL11.GL_TEXTURE_2D, 0);
     }
 
-    // Внутренний класс для хранения данных
         private record Renderable(SpriteComponent sprite, GameObj transform) {
     }
 }

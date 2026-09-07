@@ -18,7 +18,7 @@ class Bullet extends GameObject {
 
     private void move(double step) {
         setPosition(this.pos_x += SPEED * step, pos_y);
-        if (this.pos_x > 800) { // За экраном
+        if (this.pos_x > 800) {
             this.destroy();
         }
     }

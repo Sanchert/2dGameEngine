@@ -101,7 +101,7 @@
             <classifier>natives-macos</classifier>
         </dependency>
 
-        <!-- OpenGL (вам нужен для GL11) -->
+        <!-- OpenGL -->
         <dependency>
             <groupId>org.lwjgl</groupId>
             <artifactId>lwjgl-opengl</artifactId>
@@ -125,7 +125,7 @@
             <version>${lwjgl.version}</version>
             <classifier>natives-macos</classifier>
         </dependency>
-        <!-- STB (загрузка изображений) -->
+        <!-- STB -->
         <dependency>
             <groupId>org.lwjgl</groupId>
             <artifactId>lwjgl-stb</artifactId>
@@ -168,7 +168,6 @@
                 <version>0.0.8</version>
                 <executions>
                     <execution>
-                        <!-- Default configuration for running with: mvn clean javafx:run -->
                         <id>default-cli</id>
                         <configuration>
                             <mainClass>org.example.keenmarksmanfx/org.example.keenmarksmanfx.HelloApplication
