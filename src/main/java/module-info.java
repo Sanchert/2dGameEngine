@@ -6,6 +6,7 @@ module org.example.keenmarksmanfx {
     requires org.jetbrains.annotations;
     requires org.lwjgl.glfw;
     requires org.lwjgl.opengl;
+    requires org.lwjgl.stb;
 
     opens org.example.keenmarksmanfx to javafx.fxml;
     exports org.example.keenmarksmanfx;
