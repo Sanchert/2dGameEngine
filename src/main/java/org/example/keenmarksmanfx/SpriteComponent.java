@@ -1,5 +1,7 @@
 package org.example.keenmarksmanfx;
 
+import java.util.Arrays;
+
 @AutoName(prefix = "SpriteComponent")
 public class SpriteComponent extends BaseComponent {
     private int textureID;
@@ -8,8 +10,9 @@ public class SpriteComponent extends BaseComponent {
     private boolean visible = true;
     private int layer;
 
-    public SpriteComponent(GameObj owner) {
+    public SpriteComponent(GameObj owner, int textureID) {
         super(true, owner);
+        this.textureID = textureID;
     }
 
     public void setRGBA(float r, float g, float b, float a) {
@@ -57,6 +60,14 @@ public class SpriteComponent extends BaseComponent {
 
     public void setUvCrd(float[] uvCrd) {
         this.UVCrd = uvCrd;
+    }
+
+    public void setUVCrd(int texWidth, int texHeight,
+                         int x, int y,
+                         int frameWidth, int frameHeight) {
+        this.UVCrd = UVBuilder.uvFromPixels(texWidth, texHeight, x,  y, frameWidth, frameHeight);
+        System.out.println("[SPRITE] Created with textureId: " + textureID);
+        System.out.println("[SPRITE] UV: " + Arrays.toString(UVCrd));
     }
 
     public float[] getUvCrd() {

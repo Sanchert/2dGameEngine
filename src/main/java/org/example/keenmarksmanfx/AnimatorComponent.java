@@ -3,30 +3,31 @@ package org.example.keenmarksmanfx;
 import org.jetbrains.annotations.NotNull;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @AutoName(prefix = "AnimatorComponent")
 public class AnimatorComponent extends BaseComponent {
-    private final HashMap<String, Animation> animations;
-    private long currentTime = 0;
-    private boolean isPlaying = true;
-    private boolean isLooping = true;
+    private final Map<String, Animation> animations;
+    private Animation activeAnimation;
 
     private int activeSpriteInd = 0;
-    private Animation activeAnimation;
-    private List<Long> frameToFrameIntervals;
-    private long totalDuration;
+    private long timer = 0;
+    private boolean isPlaying = true;
+    private int duration = 0;
 
-
+    private final SpriteComponent spc;
 
     public AnimatorComponent(@NotNull HashMap<String, Animation> animations, @NotNull GameObj owner) {
         super(true, owner);
         this.animations = animations;
+        activeAnimation = animations.entrySet().iterator().next().getValue();
+        duration = activeAnimation.getDuration();
+        spc = owner.getComponent(SpriteComponent.class);
     }
 
     public void setActiveAnimation(String animationName) {
-        this.activeAnimation = animations.get(animationName);
-        this.frameToFrameIntervals = activeAnimation.getFrameToFrameIntervals();
-        this.totalDuration = activeAnimation.getTotalDuration();
+        activeAnimation = animations.get(animationName);
+        duration = activeAnimation.getDuration();
     }
 
     public void play() {
@@ -37,18 +38,17 @@ public class AnimatorComponent extends BaseComponent {
         isPlaying = false;
     }
 
-    public void update() {
+    public void update(long dt) {
         if (isPlaying) {
-            currentTime += 3L; // FIXME
+            timer += dt;
 
-            if (currentTime > frameToFrameIntervals.get(activeSpriteInd)) {
-                activeSpriteInd++;
-            }
-            if (currentTime > totalDuration) {
-                currentTime = 0;
-                activeSpriteInd = 0;
-            }
+            if (timer >= activeAnimation.getFrameDuration(activeSpriteInd)) {
+                timer = 0;
+                activeSpriteInd = (activeSpriteInd + 1) % duration;
 
+                spc.setTextureID(activeAnimation.getTextureId());
+                spc.setUvCrd(activeAnimation.getUVCrd(activeSpriteInd));
+            }
         }
     }
 }
