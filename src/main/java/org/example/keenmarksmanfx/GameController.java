@@ -56,8 +56,8 @@ public class GameController {
 
     public void initialize() {
         gameWorld = new ObjectManager();
-        gameWorld.gameWorld_INIT(Root); // Для программного добавления и удаления игровых объектов
-        gameWorld.gameWorld_SETUP(Player, Score_number, Shoots_number); // TODO: изменить инициализацию на более общую
+//        gameWorld.gameWorld_INIT(Root); // Для программного добавления и удаления игровых объектов
+//        gameWorld.gameWorld_SETUP(Player, Score_number, Shoots_number); // TODO: изменить инициализацию на более общую
         startGame();
     }
 
@@ -66,7 +66,7 @@ public class GameController {
     }
     @FXML protected void onStartBtnClick() { //TODO: restart game state
         gameWorld.setGameState(GameState.RUN);
-        gameWorld.gameWorld_SETUP(Player, Score_number, Shoots_number);
+//        gameWorld.gameWorld_SETUP(Player, Score_number, Shoots_number);
     }
     @FXML protected void onExitBtnClick() {
         gameWorld.setGameState(GameState.EXIT);
@@ -76,10 +76,10 @@ public class GameController {
     }
 
     @FXML protected void onKeyPressed(KeyEvent event) {
-        gameWorld.getInputHandler().handleKeyPressed(event.getCode());
+//        gameWorld.getInputHandler().handleKeyPressed(event.getCode());
 
     }
     @FXML protected void onKeyReleased(KeyEvent event) {
-        gameWorld.getInputHandler().handleKeyReleased(event.getCode());
+//        gameWorld.getInputHandler().handleKeyReleased(event.getCode());
     }
 }

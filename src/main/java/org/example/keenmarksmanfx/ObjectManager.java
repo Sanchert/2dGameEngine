@@ -1,10 +1,5 @@
 package org.example.keenmarksmanfx;
 
-import javafx.scene.control.Label;
-import javafx.scene.input.KeyCode;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.shape.Shape;
-
 import static org.lwjgl.glfw.GLFW.*;
 
 import java.util.ArrayList;
@@ -18,7 +13,7 @@ class ObjectManager {
     private IBulletFactory bulletFactory;
     private IEnemyFactory enemyFactory;
 
-    private Label scoreText;
+//    private Label scoreText;
 
     private Player player;
     private final List<Enemy> enemies = new ArrayList<>();
@@ -34,31 +29,31 @@ class ObjectManager {
         return updateDuration;
     }
 
-    public void gameWorld_INIT(AnchorPane root) {
+    public void gameWorld_INIT(/*AnchorPane root*/) {
         if (initialised) return;
         player = new Player(21, 150);
 
         fire = new Fire(100, 100);
 
-        enemyFactory = new EnemyFactory(root, enemies);
-        bulletFactory = new PlayerBulletFactory(root, bullets);
+//        enemyFactory = new EnemyFactory(root, enemies);
+//        bulletFactory = new PlayerBulletFactory(root, bullets);
         initialised = true;
     }
 
-    public void gameWorld_SETUP(Shape playerView, Label l1, Label l2) {
+    public void gameWorld_SETUP() {
         enemies.forEach(Enemy::destroy);
         bullets.forEach(Bullet::destroy);
         cleanDestroyedObjects();
         enemies.clear();
         bullets.clear();
-
-        scoreText = l1; //
+//
+//        scoreText = l1; //
         score = 0; //TODO: order
-        scoreText.setText(Integer.toString(score)); //
+//        scoreText.setText(Integer.toString(score)); //
 
         player.setShoots(10); // TODO: order
-        player.setShootText(l2); //
-        player.setSprite(playerView);
+//        player.setShootText(l2); //
+//        player.setSprite(playerView);
         player.setPosition(21f, 150f);
 
         float enemyStartPosX = 270f;
@@ -101,7 +96,7 @@ class ObjectManager {
     public void update(double step) {
         //TODO: общий список для всех, кто требует update
         player.update(step);
-        fire.updateComponents();
+//        fire.updateComponents();
         for (Enemy obj : enemies) {
             obj.update(step);
         }
@@ -129,14 +124,14 @@ class ObjectManager {
     }
 
     private void updateScore(int newScore) {
-        scoreText.setText(Integer.toString(newScore));
+//        scoreText.setText(Integer.toString(newScore));
     }
 
     private void cleanDestroyedObjects() {
         bullets.removeIf(bullet -> {
             if (bullet.isDestroyed()) {
                 if (bullet.sprite != null && bullet.sprite.getParent() != null) {
-                    ((AnchorPane) bullet.sprite.getParent()).getChildren().remove(bullet.sprite);
+//                    ((AnchorPane) bullet.sprite.getParent()).getChildren().remove(bullet.sprite);
                 }
                 return true;
             }
@@ -146,7 +141,7 @@ class ObjectManager {
         enemies.removeIf(enemy -> {
             if (enemy.isDestroyed()) {
                 if (enemy.sprite != null && enemy.sprite.getParent() != null) {
-                    ((AnchorPane) enemy.sprite.getParent()).getChildren().remove(enemy.sprite);
+//                    ((AnchorPane) enemy.sprite.getParent()).getChildren().remove(enemy.sprite);
                 }
                 return true;
             }
