@@ -5,6 +5,9 @@ import java.util.HashMap;
 import java.util.List;
 
 public class GameObj {
+
+    private String tag;
+
     private final HashMap<String, IComponent> byName = new HashMap<>();
     private final HashMap<Class<? extends IComponent>, List<IComponent>> byType = new HashMap<>();
 
@@ -54,5 +57,12 @@ public class GameObj {
     public GameObj(float pos_x, float pos_y) {
         this.pos_x = pos_x;
         this.pos_y = pos_y;
+    }
+
+    public String getTag() {
+        return tag;
+    }
+    public void setTag(String tag) {
+        this.tag = tag;
     }
 }
