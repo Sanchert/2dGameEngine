@@ -3,15 +3,16 @@ package org.example.keenmarksmanfx;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class Animation {
     private final int textureId;
     private final List<float[]> UVCrd;
-    private List<Long> frameDuration;
+    private List<Float> frameDuration;
     private boolean looped = false;
     private final int framesCount;
-    private int duration;
+    private float duration;
 
     public Animation(@NotNull String fileName, @NotNull List<float[]> crd) {
         textureId =  Loader.textureLoad(fileName, true);
@@ -36,17 +37,25 @@ public class Animation {
         return UVCrd.get(frameIndex);
     }
 
-    public void setFrameDuration(List<Long> frameDuration) {
+    public void setFrameDuration(List<Float> frameDuration) {
         this.frameDuration = frameDuration;
-        frameDuration.forEach(time -> duration += time );
+        this.frameDuration.forEach(time -> duration += time);
     }
 
-    public Long getFrameDuration(int frameIndex) {
+    public void setFrameDuration(float time) {
+        this.frameDuration = Collections.nCopies(framesCount, time);
+    }
+
+    public Float getFrameDuration(int frameIndex) {
         return frameDuration.get(frameIndex);
     }
 
-    public int getDuration() {
-        return  duration;
+    public float getDuration() {
+        return duration;
+    }
+
+    public int getFramesCount() {
+        return framesCount;
     }
 
     public void setLooping(boolean isLooped) {
@@ -103,10 +112,10 @@ class UVBuilder {
                                        int x, int y,
                                        int frameWidth, int frameHeight) {
         return new float[]{
-                (float) x / texWidth,                          // minU
-                (float) (texHeight - y - frameHeight) / texHeight, // minV
-                (float) (x + frameWidth) / texWidth,           // maxU
-                (float) (texHeight - y) / texHeight            // maxV
+                (float) x / texWidth,
+                (float) (texHeight - y - frameHeight) / texHeight,
+                (float) (x + frameWidth) / texWidth,
+                (float) (texHeight - y) / texHeight
         };
     }
 }
