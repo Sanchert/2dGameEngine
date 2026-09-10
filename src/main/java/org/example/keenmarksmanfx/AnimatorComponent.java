@@ -1,33 +1,37 @@
 package org.example.keenmarksmanfx;
 
 import org.jetbrains.annotations.NotNull;
+
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 @AutoName(prefix = "AnimatorComponent")
 public class AnimatorComponent extends BaseComponent {
-    private final Map<String, Animation> animations;
-    private Animation activeAnimation;
+    private final Map<String, Animation> animations = new HashMap<>();
+    private Animation activeAnimation = null;
 
     private int activeSpriteInd = 0;
-    private long timer = 0;
+    private float timer = 0;
     private boolean isPlaying = true;
-    private int duration = 0;
 
     private final SpriteComponent spc;
 
-    public AnimatorComponent(@NotNull HashMap<String, Animation> animations, @NotNull GameObj owner) {
+    public AnimatorComponent(@NotNull GameObj owner) {
         super(true, owner);
-        this.animations = animations;
-        activeAnimation = animations.entrySet().iterator().next().getValue();
-        duration = activeAnimation.getDuration();
         spc = owner.getComponent(SpriteComponent.class);
+    }
+
+    public void addAnimation(String name, Animation animation) {
+        if (activeAnimation == null) {
+            activeAnimation = animation;
+        }
+        animations.put(name, animation);
     }
 
     public void setActiveAnimation(String animationName) {
         activeAnimation = animations.get(animationName);
-        duration = activeAnimation.getDuration();
     }
 
     public void play() {
@@ -38,14 +42,13 @@ public class AnimatorComponent extends BaseComponent {
         isPlaying = false;
     }
 
-    public void update(long dt) {
+    public void update(float dt) {
         if (isPlaying) {
             timer += dt;
 
             if (timer >= activeAnimation.getFrameDuration(activeSpriteInd)) {
                 timer = 0;
-                activeSpriteInd = (activeSpriteInd + 1) % duration;
-
+                activeSpriteInd = (activeSpriteInd + 1) % activeAnimation.getFramesCount();
                 spc.setTextureID(activeAnimation.getTextureId());
                 spc.setUvCrd(activeAnimation.getUVCrd(activeSpriteInd));
             }
