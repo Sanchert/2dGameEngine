@@ -1,4 +1,4 @@
-package org.example.keenmarksmanfx;
+package io.github.sanchert.namelessgf;
 
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;

@@ -1,4 +1,4 @@
-package org.example.keenmarksmanfx;
+package io.github.sanchert.namelessgf;
 
 enum GameDifficulty {
     //    EASY(2),

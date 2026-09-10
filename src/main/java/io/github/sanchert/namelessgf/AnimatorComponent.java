@@ -1,10 +1,8 @@
-package org.example.keenmarksmanfx;
+package io.github.sanchert.namelessgf;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @AutoName(prefix = "AnimatorComponent")
@@ -23,7 +21,7 @@ public class AnimatorComponent extends BaseComponent {
         spc = owner.getComponent(SpriteComponent.class);
     }
 
-    public void addAnimation(String name, Animation animation) {
+    public void addAnimation(@NotNull String name, @NotNull Animation animation) {
         if (activeAnimation == null) {
             activeAnimation = animation;
         }

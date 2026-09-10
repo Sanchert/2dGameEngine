@@ -1,4 +1,4 @@
-package org.example.keenmarksmanfx;
+package io.github.sanchert.namelessgf;
 
 public abstract class ScriptComponent extends BaseComponent implements IScript{
 

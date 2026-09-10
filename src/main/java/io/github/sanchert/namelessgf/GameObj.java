@@ -1,4 +1,4 @@
-package org.example.keenmarksmanfx;
+package io.github.sanchert.namelessgf;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
